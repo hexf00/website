@@ -5,7 +5,7 @@ import { registerPromiseWorker } from "./WorkerUtils";
 
 declare var Babel: any;
 declare var babelPresetEnv: any;
-declare function importScripts(url: string): void;
+declare function importScripts (url: string): void;
 
 // This script should be executed within a web-worker.
 // Values returned below will be automatically wrapped in Promises.
@@ -14,6 +14,15 @@ registerPromiseWorker(message => {
 
   switch (method) {
     case "compile":
+      console.log('compile', message.code, message.config);
+
+      let index = message.config.plugins.indexOf('@babel/plugin-proposal-decorators')
+      if (index > -1) {
+        message.config.plugins[index] = [
+          "@babel/plugin-proposal-decorators",
+          { legacy: true }
+        ]
+      }
       return compile(message.code, message.config);
 
     case "getBabelVersion":
@@ -68,6 +77,7 @@ registerPromiseWorker(message => {
 
     case "registerPlugins":
       try {
+        console.log('registerPlugins', message.plugins);
         message.plugins.forEach(({ pluginName, instanceName }) => {
           let plugin = self[instanceName];
 

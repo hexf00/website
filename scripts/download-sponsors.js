@@ -127,10 +127,11 @@ const uniqBy = (arr, predicate) => {
 };
 
 (async () => {
-  const members = await getAllNodes(
-    membersGraphqlQuery,
-    data => data.account.members.nodes
-  );
+  // const members = await getAllNodes(
+  //   membersGraphqlQuery,
+  //   data => data.account.members.nodes
+  // );
+  const members = [];
   let supporters = members
     .map(nodeToSupporter)
     .sort((a, b) => b.totalDonations - a.totalDonations);
